@@ -8,6 +8,17 @@ ORGANIZATION=""
 PAGE_SIZE=1
 ORDERING="last_updated"
 
+# ========== CHECK DEPENDENCIES ==========
+echo "📦 Verificando dependências..."
+if ! command -v jq &> /dev/null; then
+  echo "⚙️ Instalando jq..."
+  sudo apt-get update -y
+  sudo apt-get install -y jq
+else
+  echo "✅ jq já está instalado."
+fi
+
+
 # ========== PARSE ARGUMENTS ==========
 while [[ $# -gt 0 ]]; do
   case "$1" in
