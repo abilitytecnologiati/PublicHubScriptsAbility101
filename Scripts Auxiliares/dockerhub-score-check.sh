@@ -99,3 +99,9 @@ echo "🛡 Políticas Avaliadas:"
 echo "------------------------"
 
 echo "$SCOUT_SCORE_RESPONSE" | jq -r '.results[0].result.policies[] | "- \(.label): \(.status | ascii_upcase)"'
+
+# ========== DEBUG RAW OUTPUT ==========
+echo ""
+echo "🐞 JSON bruto retornado pelo Docker Scout:"
+echo "-----------------------------------------"
+echo "$SCOUT_SCORE_RESPONSE" | jq .
