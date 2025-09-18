@@ -7,6 +7,9 @@ REPO=""
 ORGANIZATION=""
 PAGE_SIZE=1
 ORDERING="last_updated"
+SLEEP=40
+
+
 
 # ========== CHECK DEPENDENCIES ==========
 echo "📦 Verificando dependências..."
@@ -28,6 +31,7 @@ while [[ $# -gt 0 ]]; do
     --organization) ORGANIZATION="$2"; shift 2 ;;
     --page-size) PAGE_SIZE="$2"; shift 2 ;;
     --ordering) ORDERING="$2"; shift 2 ;;
+    --sleep) SLEEP="$2"; shift 2 ;;
     *)
       echo "❌ Opção inválida: $1"
       echo "Use: --username USER --password TOKEN --repo REPO --organization ORG [--page-size N] [--ordering CRITERIA]"
@@ -35,6 +39,9 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+echo "⏳ Aguardando 40 segundos para sincronização no Docker Hub..."
+sleep $SLEEP
 
 # ========== LOGIN ==========
 echo "🔐 Realizando login no Docker Hub com usuário $USERNAME..."
@@ -100,8 +107,3 @@ echo "------------------------"
 
 echo "$SCOUT_SCORE_RESPONSE" | jq -r '.results[0].result.policies[] | "- \(.label): \(.status | ascii_upcase)"'
 
-# ========== DEBUG RAW OUTPUT ==========
-echo ""
-echo "🐞 JSON bruto retornado pelo Docker Scout:"
-echo "-----------------------------------------"
-echo "$SCOUT_SCORE_RESPONSE" | jq .
