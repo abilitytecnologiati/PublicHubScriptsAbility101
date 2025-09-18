@@ -100,10 +100,20 @@ else
   echo "🏅 Score de Segurança: $SCORE"
 fi
 
-# ========== DETALHE DAS POLÍTICAS ==========
-echo ""
-echo "🛡 Políticas Avaliadas:"
-echo "------------------------"
 
-echo "$SCOUT_SCORE_RESPONSE" | jq -r '.results[0].result.policies[] | "- \(.label): \(.status | ascii_upcase)"'
-
+# ========== SUMMARY GITHUB ACTIONS ==========
+if [[ "$SCORE" != "null" && -n "$SCORE" ]]; then
+  {
+    echo "## 🔍 Resultado do Docker Scout"
+    echo ""
+    echo "**📦 Repositório:** \`$REPO\`"
+    echo "**🏷️ Última tag:** \`$TAG_NAME\`"
+    echo "**🔐 Digest:** \`$TAG_DIGEST\`"
+    echo "**📅 Atualizado:** \`$TAG_DATE\`"
+    echo ""
+    echo "**🏅 Score de Segurança:** \`$SCORE\`"
+    echo ""
+    echo "### 🛡 Políticas Avaliadas"
+    echo "$SCOUT_SCORE_RESPONSE" | jq -r '.results[0].result.policies[] | "- \(.label): \(.status | ascii_upcase)"'
+  } >> "$GITHUB_STEP_SUMMARY"
+fi
