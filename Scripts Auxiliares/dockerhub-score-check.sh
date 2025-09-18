@@ -103,6 +103,18 @@ fi
 
 # ========== SUMMARY GITHUB ACTIONS ==========
 if [[ "$SCORE" != "null" && -n "$SCORE" ]]; then
+
+  # Define cor com base no score (A-F)
+  COLOR="gray"
+  case "$SCORE" in
+    A) COLOR="green" ;;
+    B) COLOR="limegreen" ;;
+    C) COLOR="orange" ;;
+    D) COLOR="darkorange" ;;
+    E) COLOR="orangered" ;;
+    F) COLOR="red" ;;
+  esac
+
   {
     echo "## 🔍 Resultado do Docker Scout"
     echo ""
@@ -111,9 +123,19 @@ if [[ "$SCORE" != "null" && -n "$SCORE" ]]; then
     echo "**🔐 Digest:** \`$TAG_DIGEST\`"
     echo "**📅 Atualizado:** \`$TAG_DATE\`"
     echo ""
-    echo "**🏅 Score de Segurança:** \`$SCORE\`"
+    echo -n "**🏅 Score de Segurança:** "
+    echo "<span style=\"color:$COLOR;font-weight:bold;font-size:1.2em\">$SCORE</span>"
     echo ""
     echo "### 🛡 Políticas Avaliadas"
     echo "$SCOUT_SCORE_RESPONSE" | jq -r '.results[0].result.policies[] | "- \(.label): \(.status | ascii_upcase)"'
   } >> "$GITHUB_STEP_SUMMARY"
+
+  # Aborta se score for diferente de A ou B
+  if [[ "$SCORE" != "A" && "$SCORE" != "B" ]]; then
+    echo ""
+    echo "❌ Deploy **ABORTADO** por motivo de segurança!"
+    echo "🔒 O Score do Docker Scout foi: $SCORE (inadequado para produção)"
+    echo "ℹ️ Consulte os detalhes no summary do GitHub Actions para entender as políticas falhas."
+    exit 2
+  fi
 fi
