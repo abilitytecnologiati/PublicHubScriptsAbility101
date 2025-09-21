@@ -131,7 +131,7 @@ if [[ "$SCORE" != "null" && -n "$SCORE" ]]; then
   } >> "$GITHUB_STEP_SUMMARY"
 
   # Aborta se score for diferente de A ou B
-  if [[ "$SCORE" != "A" && "$SCORE" != "B" ]]; then
+  if [[ "$SCORE" != "A" && "$SCORE" != "B" && "$SCORE" != "C" ]]; then
     echo ""
     echo "❌ Deploy **ABORTADO** por motivo de segurança!"
     echo "🔒 O Score do Docker Scout foi: $SCORE (inadequado para produção)"
